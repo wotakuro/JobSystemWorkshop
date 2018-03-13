@@ -27,7 +27,8 @@ public class TransparentAssetPipeInstance : RenderPipeline
     private CullResults cull;
     private ScriptableCullingParameters cullingParams;
     private CommandBuffer cmd;
-    private ShaderPassName basicPass = new ShaderPassName("SRPTest");
+    private ShaderPassName zPrepass = new ShaderPassName("ZPrepass");
+    private ShaderPassName basicPass = new ShaderPassName("BasicPass");
 
     public override void Render(ScriptableRenderContext context, Camera[] cameras)
     {
@@ -54,22 +55,25 @@ public class TransparentAssetPipeInstance : RenderPipeline
 
             // clear depth buffer
             cmd.Clear();
-            cmd.ClearRenderTarget(true, true, Color.black);
+            cmd.ClearRenderTarget(true, true, Color.black,1.0f);
             context.ExecuteCommandBuffer(cmd);
 
             // Draw opaque objects using BasicPass shader pass
-            var settings = new DrawRendererSettings(camera, basicPass);
+            var settings = new DrawRendererSettings(camera, zPrepass);
             settings.sorting.flags = SortFlags.CommonOpaque;
 
             var filterSettings = new FilterRenderersSettings(true) { renderQueueRange = RenderQueueRange.opaque };
             context.DrawRenderers(cull.visibleRenderers, ref settings, filterSettings);
 
             // Draw skybox
-            // context.DrawSkybox(camera);
 
             // Draw transparent objects using BasicPass shader pass
-            settings.sorting.flags = SortFlags.CommonTransparent;
+            settings.sorting.flags = SortFlags.CommonOpaque;
             filterSettings.renderQueueRange = RenderQueueRange.transparent;
+            context.DrawRenderers(cull.visibleRenderers, ref settings, filterSettings);
+
+            settings = new DrawRendererSettings(camera, basicPass);
+            settings.sorting.flags = SortFlags.CommonOpaque;
             context.DrawRenderers(cull.visibleRenderers, ref settings, filterSettings);
             
             context.Submit();

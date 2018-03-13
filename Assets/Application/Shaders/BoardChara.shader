@@ -11,10 +11,13 @@
 		Tags { "Queue"="Transparent" "RenderType"="Transparent"}
 		LOD 100
 		
-        ZWrite Off
-        Blend SrcAlpha OneMinusSrcAlpha
+		// Z prepass
 		Pass
 		{
+            Tags { "LightMode" = "ZPrepass"}
+			ZWrite On
+			ColorMask 0
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -64,15 +67,21 @@
 			{
 				// sample the texture
 				fixed4 col = tex2D(_MainTex, i.uv);
+				clip( col.a - 0.5);
 				return col;
 			}
 			ENDCG
 		}
 
+
 		// その２のパス
 		Pass
 		{
-            Tags { "LightMode" = "SRPTest"}
+            Tags { "LightMode" = "BasicPass"}
+			ZWrite Off
+			ZTest LEqual 
+	        Blend SrcAlpha OneMinusSrcAlpha
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

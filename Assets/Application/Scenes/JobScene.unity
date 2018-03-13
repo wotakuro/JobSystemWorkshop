@@ -144,7 +144,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 282840810}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f79cb11d787dc346bc59730577135c5, type: 3}
   m_Name: 
@@ -168,7 +168,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 60
   field of view: 40
   orthographic: 0
   orthographic size: 5
@@ -314,7 +314,7 @@ Prefab:
     - target: {fileID: 2300004, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: 2100000, guid: c3417a0770cff734aa5fe9c9c487089b, type: 2}
     - target: {fileID: 100000, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -391,3 +391,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!1 &1660692770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1660692772}
+  - component: {fileID: 1660692771}
+  m_Layer: 0
+  m_Name: CharaManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1660692771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1660692770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220624e58d5bbd841b8e2ecbca534ed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1192997127559954, guid: 997f40ac3732aa44a881d5cf34cf0998, type: 2}
+  running: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
+  drawMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
+  characterNum: 2000
+--- !u!4 &1660692772
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1660692770}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.71, z: 12.48}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
