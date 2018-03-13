@@ -28,6 +28,8 @@ public class CharaManager : MonoBehaviour
     private NativeArray<Rect> drawParameter;
 
 
+    private NativeArray<Rect> animationRectInfo;
+
     private CommandBuffer commandBuffer;
 
     // Use this for initialization
@@ -39,8 +41,14 @@ public class CharaManager : MonoBehaviour
         characterTransforms = new Transform[unityChanNum];
         velocities = new NativeArray<Vector3>(unityChanNum, Allocator.Persistent);
         drawParameter = new NativeArray<Rect>(unityChanNum, Allocator.Persistent);
+        animationRectInfo = new NativeArray<Rect>(running.Length, Allocator.Persistent);
+        for (int i = 0; i < running.Length; ++i)
+        {
+            animationRectInfo[i] = running.GetUvRect(i);
+        }
 
         var material = new Material(drawMaterial);
+
         material.mainTexture = running.texture;
         for (int i = 0; i < unityChanNum; ++i)
         {
@@ -60,6 +68,7 @@ public class CharaManager : MonoBehaviour
     }
     void OnDestroy()
     {
+        animationRectInfo.Dispose();
         velocities.Dispose();
         drawParameter.Dispose();
     }
@@ -92,47 +101,14 @@ public class CharaManager : MonoBehaviour
             cameraDir.y = 0.0f;
             Quaternion cameraRotate = Quaternion.FromToRotation(cameraDir, Vector3.forward);
 
-            int direction = GetDirection(cameraRotate * velocities[i]);
-            int idx = ((int)(i * 0.3f + Time.realtimeSinceStartup * 25.0f) ) % animationLength + (direction * animationLength);
-            this.drawParameter[i] = running.GetUvRect(idx);
+            int direction = AnimationInfo.GetDirection(cameraRotate * velocities[i]);
+            int rectIndex = ((int)(i * 0.3f + Time.realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
+            this.drawParameter[i] = animationRectInfo[rectIndex];
         }
         // Rectの指定
         for (int i = 0; i < unityChanNum; ++i)
         {
             boardRenderers[i].SetRect(drawParameter[i]);
-        }
-    }
-
-    /// <summary>
-    ///  方向の取得を行います
-    /// </summary>
-    /// <param name="dir">カメラに対する向きのベクトルを指定</param>
-    /// <returns> 0～7のいずれかで方向を返します</returns>
-    private static int GetDirection(Vector3 dir)
-    {
-        float param1 = 0.84f;
-        float param2 = 0.4f;
-
-        dir.Normalize();
-        if (dir.z > param1) { 
-            return 4;
-        }else if( dir.z > param2 ){
-            if (dir.x > 0.0f) { return 3; }
-            else { return 5; }
-        }
-        else if (dir.z > -param2)
-        {
-            if (dir.x > 0.0f) { return 2; }
-            else { return 6; }
-        }
-        else if (dir.z > -param1)
-        {
-            if (dir.x > 0.0f) { return 1; }
-            else { return 7; }
-        }
-        else
-        {
-            return 0;
         }
     }
 
