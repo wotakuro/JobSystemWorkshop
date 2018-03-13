@@ -14,16 +14,15 @@ public class BoardRenderer : MonoBehaviour {
         prop = new MaterialPropertyBlock();
     }
 
-    public void SetTexture(Texture tex)
+    public void SetMaterial(Material material)
     {
-        renderer.sharedMaterial.mainTexture = tex;
-        //prop.SetTexture("_MainTex", tex);
+        renderer.material = material;
     }
 
     public void SetRect(Rect r)
     {
         Vector4 val = new Vector4( r.x,r.y,r.width,r.height);
-        prop.SetVector("_RectValue", val);
+        prop.SetVector( ShaderNameHash.RectValue, val);
         renderer.SetPropertyBlock(prop);
         this.rect = r;
     }

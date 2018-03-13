@@ -11,6 +11,7 @@ public class CharaManager : MonoBehaviour
 {
     public GameObject prefab;
     public AnimationInfo running;
+    public Material drawMaterial;
 
     public int unityChanNum = 100;
 
@@ -32,18 +33,21 @@ public class CharaManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        running.Initialize();
+
         boardRenderers = new BoardRenderer[unityChanNum];
         characterTransforms = new Transform[unityChanNum];
         velocities = new NativeArray<Vector3>(unityChanNum, Allocator.Persistent);
         drawParameter = new NativeArray<Rect>(unityChanNum, Allocator.Persistent);
 
-        running.Initialize();
+        var material = new Material(drawMaterial);
+        material.mainTexture = running.texture;
         for (int i = 0; i < unityChanNum; ++i)
         {
             var gmo = GameObject.Instantiate(prefab, new Vector3(Random.RandomRange(-InitPosXParam, InitPosXParam), 0.5f, Random.RandomRange(-InitPosZParam, InitPosZParam)), Quaternion.identity);
             characterTransforms[i] = gmo.transform;
             boardRenderers[i] = gmo.GetComponent<BoardRenderer>();
-            boardRenderers[i].SetTexture( running.sprites[0].texture );
+            boardRenderers[i].SetMaterial(material );
             int idx = i % running.sprites.Length;
             boardRenderers[i].SetRect( running.GetUvRect( idx ) );
         }
