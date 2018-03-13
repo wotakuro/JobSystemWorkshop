@@ -14,8 +14,8 @@ public class CharaManager : MonoBehaviour
 
     public int unityChanNum = 100;
 
-    private const float InitPosXParam = 20.0f;
-    private const float InitPosZParam = 20.0f;
+    private const float InitPosXParam = 10.0f;
+    private const float InitPosZParam = 10.0f;
 
 
     private Transform[] characterTransforms;
@@ -76,23 +76,12 @@ public class CharaManager : MonoBehaviour
 
         for (int i = 0; i < unityChanNum; ++i)
         {
-            // デバッグ用コード
-            if (unityChanNum == 1)
-            {
-                velocities[i] = new Vector3(0, 0, 1);
-                characterTransforms[i].position = Vector3.up;
-            }
-            else
-            {
-                characterTransforms[i].position = characterTransforms[i].position + velocities[i] * Time.deltaTime;
-            }
-
+            characterTransforms[i].position = characterTransforms[i].position + velocities[i] * Time.deltaTime;
             characterTransforms[i].rotation = Quaternion.LookRotation(characterTransforms[i].position - cameraPosition);
         }
 
-
         //
-        int animationLength = 15;
+        int animationLength = running.animationLength ;
         for (int i = 0; i < unityChanNum; ++i)
         {
             var cameraDir = characterTransforms[i].position - Camera.main.transform.position;
@@ -100,18 +89,21 @@ public class CharaManager : MonoBehaviour
             Quaternion cameraRotate = Quaternion.FromToRotation(cameraDir, Vector3.forward);
 
             int direction = GetDirection(cameraRotate * velocities[i]);
-            int idx = ((int)(i * 0.3f + Time.realtimeSinceStartup * 20.0f) ) % animationLength + (direction * animationLength);
+            int idx = ((int)(i * 0.3f + Time.realtimeSinceStartup * 25.0f) ) % animationLength + (direction * animationLength);
             this.drawParameter[i] = running.GetUvRect(idx);
         }
-
-
+        // Rectの指定
         for (int i = 0; i < unityChanNum; ++i)
         {
             boardRenderers[i].SetRect(drawParameter[i]);
         }
-
     }
 
+    /// <summary>
+    ///  方向の取得を行います
+    /// </summary>
+    /// <param name="dir">カメラに対する向きのベクトルを指定</param>
+    /// <returns> 0～7のいずれかで方向を返します</returns>
     private static int GetDirection(Vector3 dir)
     {
         float param1 = 0.84f;

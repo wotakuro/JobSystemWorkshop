@@ -27,6 +27,11 @@ public class AnimationInfo : ScriptableObject {
         get { return preCalculateData.Length; }
     }
 
+    public int animationLength
+    {
+        get { return preCalculateData.Length / AnglePatternNum; }
+    }
+
 
     public void Initialize()
     {

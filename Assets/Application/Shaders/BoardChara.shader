@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_ExpectedRect("Expected",Vector) = (0,0,0.25,0.25)
 		_RectValue("Rect",Vector) = (0,0,0,0)
 	}
 	SubShader
@@ -21,7 +22,10 @@
 			#pragma multi_compile_instancing
 			
 			#include "UnityCG.cginc"
-
+			
+			sampler2D _MainTex;
+			float4 _ExpectedRect;
+			float4 _MainTex_ST;
 			
 			UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(float4,_RectValue)
@@ -40,16 +44,15 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				o.vertex = UnityObjectToClipPos(v.vertex);
-
 				float4 rect = UNITY_ACCESS_INSTANCED_PROP(Props,_RectValue);
+				v.vertex.x *= rect.z /_ExpectedRect.z;
+				v.vertex.y *= rect.w / _ExpectedRect.w;
+				o.vertex = UnityObjectToClipPos(v.vertex);
 
 				v.uv.x = (v.uv.x * rect.z) + rect.x;
 				v.uv.y = (v.uv.y * rect.w) + rect.y;

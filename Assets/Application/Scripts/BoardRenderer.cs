@@ -16,7 +16,8 @@ public class BoardRenderer : MonoBehaviour {
 
     public void SetTexture(Texture tex)
     {
-        this.renderer.sharedMaterial.mainTexture = tex;
+        renderer.sharedMaterial.mainTexture = tex;
+        //prop.SetTexture("_MainTex", tex);
     }
 
     public void SetRect(Rect r)
