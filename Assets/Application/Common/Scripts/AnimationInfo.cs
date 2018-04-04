@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// スプライトのパラパラアニメーションの情報
 public class AnimationInfo : ScriptableObject {
     public Sprite[] sprites;
 

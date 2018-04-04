@@ -1,4 +1,4 @@
-﻿Shader "App/BoardChara"
+﻿Shader "App/SRP/BoardChara"
 {
 	Properties
 	{
@@ -46,22 +46,9 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			
-			v2f vert (appdata v)
-			{
-				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				float4 rect = UNITY_ACCESS_INSTANCED_PROP(Props,_RectValue);
-				v.vertex.x *= rect.z /_ExpectedRect.z;
-				v.vertex.y *= rect.w / _ExpectedRect.w;
-				o.vertex = UnityObjectToClipPos(v.vertex);
+			//vertex Shaderの実装はココ
+			#include "../Cginc/BoardChara.cginc"
 
-				v.uv.x = (v.uv.x * rect.z) + rect.x;
-				v.uv.y = (v.uv.y * rect.w) + rect.y;
-
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				return o;
-			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
@@ -79,7 +66,7 @@
 		{
             Tags { "LightMode" = "BasicPass"}
 			ZWrite Off
-			ZTest LEqual 
+			ZTest Equal 
 	        Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
@@ -111,21 +98,8 @@
 			};
 
 			
-			v2f vert (appdata v)
-			{
-				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				float4 rect = UNITY_ACCESS_INSTANCED_PROP(Props,_RectValue);
-				v.vertex.x *= rect.z /_ExpectedRect.z;
-				v.vertex.y *= rect.w / _ExpectedRect.w;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-
-				v.uv.x = (v.uv.x * rect.z) + rect.x;
-				v.uv.y = (v.uv.y * rect.w) + rect.y;
-
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				return o;
-			}
+			//vertex Shaderの実装はココ
+			#include "../Cginc/BoardChara.cginc"
 			
 			fixed4 frag (v2f i) : SV_Target
 			{

@@ -1,4 +1,4 @@
-﻿Shader "Custom/SRPDiffuse"
+﻿Shader "App/SRP/Diffuse"
 {
 	Properties
 	{

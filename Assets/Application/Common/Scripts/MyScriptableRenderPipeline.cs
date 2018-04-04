@@ -7,21 +7,13 @@ using UnityEngine.Experimental.Rendering;
 [ExecuteInEditMode]
 public class MyScriptableRenderPipeline : RenderPipelineAsset
 {
-#if UNITY_EDITOR
-    [UnityEditor.MenuItem("SRP-Demo/Create")]
-    static void CreateBasicAssetPipeline()
-    {
-        var instance = ScriptableObject.CreateInstance<MyScriptableRenderPipeline>();
-        UnityEditor.AssetDatabase.CreateAsset(instance, "Assets/Application/Common/Datas/SRP/MyScriptableRenderPipeline.asset");
-    }
-#endif
-
     protected override IRenderPipeline InternalCreatePipeline()
     {
         return new MyScriptableRenderPipelineInstance();
     }
 }
 
+/// このプロジェクト向けに作成した ScriptableRenderPipeline( SRP )です
 public class MyScriptableRenderPipelineInstance : RenderPipeline
 {
 
@@ -59,11 +51,11 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
             SetUpDirectionalLightParam(cull.visibleLights);
 
             // キャラクターを　ZPrepassで描画します
-            DrawCharacter(context, camera, zPrepass);
+            DrawCharacter(context, camera, zPrepass, SortFlags.CommonOpaque);
             // BGをBasicPassで描画します
             DrawBg(context, camera);
             // キャラクターをBasicPassで描画します
-            DrawCharacter(context, camera, basicPass);
+            DrawCharacter(context, camera, basicPass, SortFlags.OptimizeStateChanges);
             // 最後に影を描画します
             DrawShadow(context, camera);
 
@@ -73,10 +65,10 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
     }
 
     // 指定された　Passでキャラクターを描画します
-    private void DrawCharacter(ScriptableRenderContext context, Camera camera, ShaderPassName pass)
+    private void DrawCharacter(ScriptableRenderContext context, Camera camera, ShaderPassName pass,SortFlags sortFlags)
     {
         var settings = new DrawRendererSettings(camera, pass);
-        settings.sorting.flags = SortFlags.CommonOpaque;
+        settings.sorting.flags = sortFlags;
 
         var filterSettings = new FilterRenderersSettings(true)
         {

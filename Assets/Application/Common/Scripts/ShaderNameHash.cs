@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ShaderNameHash  {
+/// Shader Parameterを渡すためのPropertyIDを事前に持っておきます
 
+public static class ShaderNameHash  {
     public static int MainTex;
     public static int RectValue;
     public static int ExpectedRect;

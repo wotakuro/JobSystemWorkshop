@@ -1,8 +1,10 @@
-﻿Shader "App/Shadow"
+﻿Shader "App/NonSRP/BoardChara"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_ExpectedRect("Expected",Vector) = (0,0,0.25,0.25)
+		_RectValue("Rect",Vector) = (0,0,0,0)
 	}
 	SubShader
 	{
@@ -11,7 +13,6 @@
 		
 		Pass
 		{
-            Tags { "LightMode" = "BasicPass"}
 			ZWrite Off
 			ZTest LEqual 
 	        Blend SrcAlpha OneMinusSrcAlpha
@@ -27,6 +28,10 @@
 			float4 _ExpectedRect;
 			float4 _MainTex_ST;
 			
+			UNITY_INSTANCING_BUFFER_START(Props)
+			UNITY_DEFINE_INSTANCED_PROP(float4,_RectValue)
+			UNITY_INSTANCING_BUFFER_END(Props)
+
 			struct appdata
 			{
 				float4 vertex : POSITION;
@@ -39,16 +44,10 @@
 				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 			};
-
 			
-			v2f vert (appdata v)
-			{
-				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				return o;
-			}
+			//vertex Shaderの実装はココ
+			#include "../Cginc/BoardChara.cginc"
+
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
