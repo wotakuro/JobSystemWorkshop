@@ -27,19 +27,42 @@ public class CustomPlayerLoop {
             // FixedUpdateの中身消します
             if (subSystem.type == typeof(FixedUpdate))
             {
-                subSystem.subSystemList = new PlayerLoopSystem[0];
+                subSystem.subSystemList = CreateSubSystems();
+            }
+            // PreLateUpdateの中身消します
+            if (subSystem.type == typeof(PreLateUpdate) )
+            {
+                subSystem.subSystemList = CreateSubSystems(typeof(UnityEngine.Experimental.PlayerLoop.PreLateUpdate.EndGraphicsJobsLate));
             }
             // Preupdateも大体削る
-            if (subSystem.type == typeof(PreUpdate))
+            else if (subSystem.type == typeof(PreUpdate))
             {
-                Debug.Log(subSystem.subSystemList[0].type);
-                subSystem.subSystemList = new PlayerLoopSystem[1];
-                subSystem.subSystemList[0] = new PlayerLoopSystem();
-                subSystem.subSystemList[0].type = typeof( UnityEngine.Experimental.PlayerLoop.PreUpdate.CheckTexFieldInput );
+                subSystem.subSystemList = CreateSubSystems(typeof(UnityEngine.Experimental.PlayerLoop.PreUpdate.CheckTexFieldInput));
+            }
+            else
+            {
+                continue;
             }
             // 構造体なので上書きしないとセットされないです
             playerLoop.subSystemList[i] = subSystem;
         }
         return playerLoop;
+    }
+
+    private static PlayerLoopSystem[] CreateSubSystems(params System.Type[] types)
+    {
+        PlayerLoopSystem[] systems;
+        if (types == null || types.Length == 0)
+        {
+            systems = new PlayerLoopSystem[0];
+            return systems;
+        }
+        systems = new PlayerLoopSystem[types.Length];
+        for (int i = 0; i < systems.Length; ++i)
+        {
+            systems[i] = new PlayerLoopSystem();
+            systems[i].type = types[i];
+        }
+        return systems;
     }
 }
