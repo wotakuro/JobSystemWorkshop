@@ -3,69 +3,82 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+// native container関連
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+//job関連
+using UnityEngine.Jobs;
+using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 
 
+// ワーク4．キャラクターを管理するマネージャ
 public class Work4CharaManager : MonoBehaviour
 {
+    // キャラクターのプレハブ
     public GameObject prefab;
-    public AnimationInfo running;
+    // アニメーションの情報
+    public AnimationInfo animationInfo;
+    // 描画用のマテリアル
     public Material drawMaterial;
 
-    public int unityChanNum = 100;
+    // キャラクター数
+    public int characterNum = 1000;
 
+    // ランダム出現位置に関するぱらえーた
     private const float InitPosXParam = 10.0f;
     private const float InitPosZParam = 10.0f;
 
-
+    // 動かす対象キャラのTransformリスト
     private Transform[] characterTransforms;
-    /// <summary>
-    /// 絵の変更等をするための部分
-    /// </summary>
-    private BoardRenderer[] boardRenderers;
+    // 各キャラクターの移動速度
     private NativeArray<Vector3> velocities;
+    // 各キャラクターの描画用する矩形領域
     private NativeArray<Rect> drawParameter;
 
+    // 絵の変更等をするための部分
+    private BoardRenderer[] boardRenderers;
 
+    // Animationの矩形情報
     private NativeArray<Rect> animationRectInfo;
 
-    private CommandBuffer commandBuffer;
-
-    // Use this for initialization
+    /// <summary>
+    /// Start関数
+    /// </summary>
     void Start()
     {
-        running.Initialize();
-
-        boardRenderers = new BoardRenderer[unityChanNum];
-        characterTransforms = new Transform[unityChanNum];
-        velocities = new NativeArray<Vector3>(unityChanNum, Allocator.Persistent);
-        drawParameter = new NativeArray<Rect>(unityChanNum, Allocator.Persistent);
-        animationRectInfo = new NativeArray<Rect>(running.Length, Allocator.Persistent);
-        for (int i = 0; i < running.Length; ++i)
+        // animation の情報初期化
+        animationInfo.Initialize();
+        // それぞれのバッファーを初期化/作成
+        boardRenderers = new BoardRenderer[characterNum];
+        characterTransforms = new Transform[characterNum];
+        velocities = new NativeArray<Vector3>(characterNum, Allocator.Persistent);
+        drawParameter = new NativeArray<Rect>(characterNum, Allocator.Persistent);
+        animationRectInfo = new NativeArray<Rect>(animationInfo.Length, Allocator.Persistent);
+        for (int i = 0; i < animationInfo.Length; ++i)
         {
-            animationRectInfo[i] = running.GetUvRect(i);
+            animationRectInfo[i] = animationInfo.GetUvRect(i);
         }
-
         var material = new Material(drawMaterial);
-
-        material.mainTexture = running.texture;
-        for (int i = 0; i < unityChanNum; ++i)
+        material.mainTexture = animationInfo.texture;
+        for (int i = 0; i < characterNum; ++i)
         {
             var gmo = GameObject.Instantiate(prefab, new Vector3(Random.RandomRange(-InitPosXParam, InitPosXParam), 0.5f, Random.RandomRange(-InitPosZParam, InitPosZParam)), Quaternion.identity);
             characterTransforms[i] = gmo.transform;
             boardRenderers[i] = gmo.GetComponent<BoardRenderer>();
             boardRenderers[i].SetMaterial(material );
-            int idx = i % running.sprites.Length;
-            boardRenderers[i].SetRect( running.GetUvRect( idx ) );
+            int idx = i % animationInfo.sprites.Length;
+            boardRenderers[i].SetRect( animationInfo.GetUvRect( idx ) );
         }
-
-        for (int i = 0; i < unityChanNum; ++i)
+        for (int i = 0; i < characterNum; ++i)
         {
             velocities[i] = new Vector3(Random.RandomRange(-1.0f, 1.0f), 0.0f, Random.RandomRange(-1.0f, 1.0f));
             velocities[i] = velocities[i].normalized;
         }
     }
+    /// <summary>
+    /// それぞれの NativeContainerを破棄します
+    /// </summary>
     void OnDestroy()
     {
         animationRectInfo.Dispose();
@@ -73,7 +86,9 @@ public class Work4CharaManager : MonoBehaviour
         drawParameter.Dispose();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update()
     {
         Vector3 cameraPosition = Camera.main.transform.position;
@@ -81,7 +96,8 @@ public class Work4CharaManager : MonoBehaviour
 
         // 全キャラクター分 進行方向にRayを飛ばします。
         // 何かにぶつかったら180°進行方向を変えます
-        for (int i = 0; i < unityChanNum; ++i)
+        // [課題]ここを RaycastCommandを使って並行して出来るように
+        for (int i = 0; i < characterNum; ++i)
         {
             if (Physics.Raycast(new Ray(characterTransforms[i].position, velocities[i]), Time.deltaTime * 3.0f))
             {
@@ -89,15 +105,17 @@ public class Work4CharaManager : MonoBehaviour
             }
         }
         // 全キャラクターの移動処理を行います
-        for (int i = 0; i < unityChanNum; ++i)
+        // [課題]ここもうまく計算処理を並行して出来るように
+        for (int i = 0; i < characterNum; ++i)
         {
             characterTransforms[i].position = characterTransforms[i].position + velocities[i] * Time.deltaTime;
             characterTransforms[i].rotation = Quaternion.LookRotation(characterTransforms[i].position - cameraPosition); // <- カメラを常に向くようにします
         }
 
         //キャラクターのアニメーション更新を行います
-        int animationLength = running.animationLength ;
-        for (int i = 0; i < unityChanNum; ++i)
+        // [課題]ここもうまくJobに…
+        int animationLength = animationInfo.animationLength ;
+        for (int i = 0; i < characterNum; ++i)
         {
             // プレイヤーの向いてる向きに応じて、絵を切り替えます
             var cameraDir = characterTransforms[i].position - Camera.main.transform.position;
@@ -110,7 +128,7 @@ public class Work4CharaManager : MonoBehaviour
         }
 
         // 最後にTexture内の描画領域をセットします(これはMainThreadじゃないと出来ません)
-        for (int i = 0; i < unityChanNum; ++i)
+        for (int i = 0; i < characterNum; ++i)
         {
             boardRenderers[i].SetRect(drawParameter[i]);
         }

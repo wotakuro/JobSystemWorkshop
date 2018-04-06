@@ -14,37 +14,47 @@ using Unity.Jobs;
 /// </summary>
 public class Work4JobCharaManager : MonoBehaviour
 {
+    // キャラクターのプレハブ
     public GameObject prefab;
-    public AnimationInfo running;
+    // アニメーションの情報
+    public AnimationInfo animationInfo;
+    // 描画用のマテリアル
     public Material drawMaterial;
 
-    public int characterNum = 1500;
+    // キャラクター数
+    public int characterNum = 1000;
 
+    // ランダム出現位置に関するぱらえーた
     private const float InitPosXParam = 10.0f;
     private const float InitPosZParam = 10.0f;
 
 
+    // 動かす対象キャラのTransformリスト
     private Transform[] characterTransforms;
-    /// <summary>
-    /// 絵の変更等をするための部分
-    /// </summary>
-    private BoardRenderer[] boardRenderers;
+    // 各キャラクターの移動速度
     private NativeArray<Vector3> velocities;
+    // 各キャラクターの描画用する矩形領域
     private NativeArray<Rect> drawParameter;
 
+    // 絵の変更等をするための部分
+    private BoardRenderer[] boardRenderers;
+
+    // Animationの矩形情報
     private NativeArray<Rect> animationRectInfo;
 
-
+    // フレームの頭で処理の同期をするようです
     private JobHandle nextFrameSyncHandle;
 
-
+    // jobで動かす対象のTransformのリスト
     private TransformAccessArray transformAccessArray;
+    // raycastの結果保存用
     private NativeArray<RaycastHit> rayCastResults;
+    // raycastのコマンド
     private NativeArray<RaycastCommand> rayCastCommmands;
 
     
     /// <summary>
-    /// Rayを一括計算するJob
+    /// RayCastCommandの生成を並行して行うためのJob
     /// </summary>
     private struct CreateRaycastJob : IJobParallelForTransform
     {
@@ -100,31 +110,35 @@ public class Work4JobCharaManager : MonoBehaviour
         }
     }
 
-    // Use this for initialization
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     void Start()
     {
-        running.Initialize();
+        // animation の情報初期化
+        animationInfo.Initialize();
+        // それぞれのバッファーを初期化/作成
         boardRenderers = new BoardRenderer[characterNum];
         characterTransforms = new Transform[characterNum];
         velocities = new NativeArray<Vector3>(characterNum, Allocator.Persistent);
         drawParameter = new NativeArray<Rect>(characterNum, Allocator.Persistent);
-        animationRectInfo = new NativeArray<Rect>(running.Length, Allocator.Persistent);
+        animationRectInfo = new NativeArray<Rect>(animationInfo.Length, Allocator.Persistent);
         rayCastResults = new NativeArray<RaycastHit>(characterNum, Allocator.Persistent);
         rayCastCommmands = new NativeArray<RaycastCommand>(characterNum, Allocator.Persistent);
-        for (int i = 0; i < running.Length; ++i)
+        for (int i = 0; i < animationInfo.Length; ++i)
         {
-            animationRectInfo[i] = running.GetUvRect(i);
+            animationRectInfo[i] = animationInfo.GetUvRect(i);
         }
         var material = new Material(drawMaterial);
-        material.mainTexture = running.texture;
+        material.mainTexture = animationInfo.texture;
         for (int i = 0; i < characterNum; ++i)
         {
             var gmo = GameObject.Instantiate(prefab, new Vector3(Random.RandomRange(-InitPosXParam, InitPosXParam), 0.5f, Random.RandomRange(-InitPosZParam, InitPosZParam)), Quaternion.identity);
             characterTransforms[i] = gmo.transform;
             boardRenderers[i] = gmo.GetComponent<BoardRenderer>();
             boardRenderers[i].SetMaterial(material );
-            int idx = i % running.sprites.Length;
-            boardRenderers[i].SetRect( running.GetUvRect( idx ) );
+            int idx = i % animationInfo.sprites.Length;
+            boardRenderers[i].SetRect( animationInfo.GetUvRect( idx ) );
         }
 
         for (int i = 0; i < characterNum; ++i)
@@ -134,9 +148,14 @@ public class Work4JobCharaManager : MonoBehaviour
         }
         transformAccessArray = new TransformAccessArray(characterTransforms);
     }
+
+
+    /// <summary>
+    /// それぞれの NativeContainerを破棄します
+    /// </summary>
     void OnDestroy()
     {
-        this.nextFrameSyncHandle.Complete();
+        this.nextFrameSyncHandle.Complete(); // <- ジョブが処理中のものは解放できないので、ここでJobの完了をさせます
         transformAccessArray.Dispose();
         animationRectInfo.Dispose();
         velocities.Dispose();
@@ -145,7 +164,9 @@ public class Work4JobCharaManager : MonoBehaviour
         rayCastCommmands.Dispose();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update()
     {
         Vector3 cameraPosition = Camera.main.transform.position;
@@ -170,7 +191,7 @@ public class Work4JobCharaManager : MonoBehaviour
             cameraPosition = cameraPosition,
             deltaTime = Time.deltaTime,
             realtimeSinceStartup = Time.realtimeSinceStartup,
-            animationLength = running.animationLength,
+            animationLength = animationInfo.animationLength,
             animationRectInfo = this.animationRectInfo
         };
 
@@ -187,8 +208,6 @@ public class Work4JobCharaManager : MonoBehaviour
         var moveJobHandl = characterJob.Schedule(transformAccessArray, rayCastJobHandle);
         nextFrameSyncHandle = createRaycastCommandJob.Schedule(this.transformAccessArray, moveJobHandl);
         JobHandle.ScheduleBatchedJobs();
-
-
     }
 
 
