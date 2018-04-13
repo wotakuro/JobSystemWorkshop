@@ -47,11 +47,14 @@ public class Work3JobCharaManager : MonoBehaviour
     /// </summary>
     private struct CharacterMoveJob : IJobParallelForTransform
     {
-        public Vector3 cameraPosition;
         public float deltaTime;
+        public float realtimeSinceStartup;
+        public Vector3 cameraPosition;
         public void Execute(int index, TransformAccess transform)
         {
-            transform.position = transform.position + Vector3.back * deltaTime;
+            Vector3 delta = new Vector3(Mathf.Sin(realtimeSinceStartup + index) * 0.8f, 0.0f, -1);
+
+            transform.position = transform.position + delta * deltaTime;
             if (transform.position.z < -15.0f)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, 15.0f);
@@ -121,6 +124,7 @@ public class Work3JobCharaManager : MonoBehaviour
         var characterMoveJob = new CharacterMoveJob()
         {
             deltaTime = Time.deltaTime,
+            realtimeSinceStartup = Time.realtimeSinceStartup,
             cameraPosition = cameraPosition
         };
         nextFrameSyncHandle = characterMoveJob.Schedule(transformAccessArray);

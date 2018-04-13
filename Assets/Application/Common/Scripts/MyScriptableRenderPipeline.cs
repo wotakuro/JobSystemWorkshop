@@ -16,14 +16,34 @@ public class MyScriptableRenderPipeline : RenderPipelineAsset
 /// このプロジェクト向けに作成した ScriptableRenderPipeline( SRP )です
 public class MyScriptableRenderPipelineInstance : RenderPipeline
 {
-
     private CullResults cull;
     private ScriptableCullingParameters cullingParams;
     private CommandBuffer cmd;
     private ShaderPassName zPrepass = new ShaderPassName("ZPrepass");
     private ShaderPassName basicPass = new ShaderPassName("BasicPass");
 
-    // 実際の描画部分です
+    ///
+    public CommandBuffer zPrepassCommandBuffers;
+    public CommandBuffer actualCommandBuffers;
+
+    private static MyScriptableRenderPipelineInstance instance;
+
+    public static MyScriptableRenderPipelineInstance Instance
+    {
+        get { return instance; }
+    }
+
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    public MyScriptableRenderPipelineInstance()
+    {
+        instance = this;
+    }
+
+    /// <summary>
+    /// 実際の描画処理
+    /// </summary>
     public override void Render(ScriptableRenderContext context, Camera[] cameras)
     {
         base.Render(context, cameras);
@@ -31,7 +51,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
         {
             cmd = new CommandBuffer();
         }
-
+        int idx = 0;
         foreach (var camera in cameras)
         {
             // Cullingします
@@ -50,10 +70,19 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
             // Directional Lightの値を設定します
             SetUpDirectionalLightParam(cull.visibleLights);
 
+            // 何かCommandBufferに入っていれば…
+            if (zPrepassCommandBuffers != null && idx == 0) {
+                context.ExecuteCommandBuffer(zPrepassCommandBuffers);
+            }
             // キャラクターを　ZPrepassで描画します
             DrawCharacter(context, camera, zPrepass, SortFlags.CommonOpaque);
             // BGをBasicPassで描画します
             DrawBg(context, camera);
+
+            // 何かCommandBufferに入っていれば…
+            if (actualCommandBuffers != null && idx == 0) {
+                context.ExecuteCommandBuffer(actualCommandBuffers);
+            }
             // キャラクターをBasicPassで描画します
             DrawCharacter(context, camera, basicPass, SortFlags.OptimizeStateChanges);
             // 最後に影を描画します
@@ -61,8 +90,10 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
 
             // 描画内容をコミットします
             context.Submit();
+            ++idx;
         }
     }
+
 
     // 指定された　Passでキャラクターを描画します
     private void DrawCharacter(ScriptableRenderContext context, Camera camera, ShaderPassName pass,SortFlags sortFlags)
@@ -127,9 +158,10 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
     public override void Dispose()
     {
         base.Dispose();
+        instance = null;
         if (cmd != null)
         {
-            cmd.Release();
+            cmd.Dispose();
             cmd = null;
         }
     }

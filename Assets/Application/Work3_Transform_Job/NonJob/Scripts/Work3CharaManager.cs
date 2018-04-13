@@ -84,7 +84,8 @@ public class Work3CharaManager : MonoBehaviour
         cameraPosition.y = 0.5f;
         for (int i = 0; i < characterNum; ++i)
         {
-            characterTransforms[i].position = characterTransforms[i].position + Vector3.back * Time.deltaTime;
+            Vector3 delta = new Vector3( Mathf.Sin(Time.realtimeSinceStartup + i ) * 0.8f ,0.0f, -1);
+            characterTransforms[i].position = characterTransforms[i].position + delta * Time.deltaTime;
             if (characterTransforms[i].position.z < -15.0f)
             {
                 characterTransforms[i].position = new Vector3(characterTransforms[i].position.x, characterTransforms[i].position.y, 15.0f);

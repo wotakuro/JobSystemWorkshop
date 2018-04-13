@@ -13,7 +13,7 @@ public class CustomPlayerLoop {
     static  void Init()
     {
         var loopSystem = GenerateCustomLoop();
-        PlayerLoop.SetPlayerLoop( loopSystem );
+        //PlayerLoop.SetPlayerLoop( loopSystem );
     }
 
     private static PlayerLoopSystem GenerateCustomLoop()
