@@ -23,8 +23,8 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
     private ShaderPassName basicPass = new ShaderPassName("BasicPass");
 
     ///
-    public CommandBuffer zPrepassCommandBuffers;
-    public CommandBuffer actualCommandBuffers;
+    public List <CommandBuffer> zPrepassCommandBuffers = new List<CommandBuffer>();
+    public List<CommandBuffer> actualCommandBuffers = new List<CommandBuffer>();
 
     private static MyScriptableRenderPipelineInstance instance;
 
@@ -72,7 +72,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
 
             // 何かCommandBufferに入っていれば…
             if (zPrepassCommandBuffers != null && idx == 0) {
-                context.ExecuteCommandBuffer(zPrepassCommandBuffers);
+                ExecuteCommandBufferList(context,zPrepassCommandBuffers);
             }
             // キャラクターを　ZPrepassで描画します
             DrawCharacter(context, camera, zPrepass, SortFlags.CommonOpaque);
@@ -81,7 +81,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
 
             // 何かCommandBufferに入っていれば…
             if (actualCommandBuffers != null && idx == 0) {
-                context.ExecuteCommandBuffer(actualCommandBuffers);
+                ExecuteCommandBufferList(context, actualCommandBuffers);
             }
             // キャラクターをBasicPassで描画します
             DrawCharacter(context, camera, basicPass, SortFlags.OptimizeStateChanges);
@@ -91,6 +91,15 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
             // 描画内容をコミットします
             context.Submit();
             ++idx;
+        }
+    }
+
+    private void ExecuteCommandBufferList(ScriptableRenderContext context, List<CommandBuffer> cmdBuffers)
+    {
+        if (cmdBuffers == null) { return; }
+        foreach (var cmdBuffer in cmdBuffers)
+        {
+            context.ExecuteCommandBuffer(cmdBuffer);
         }
     }
 

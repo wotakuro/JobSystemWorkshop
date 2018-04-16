@@ -115,6 +115,7 @@ public class Work4CharaManager : MonoBehaviour
         //キャラクターのアニメーション更新を行います
         // [課題]ここもうまくJobに…
         int animationLength = animationInfo.animationLength ;
+        float realtimeSinceStartup = Time.realtimeSinceStartup;
         for (int i = 0; i < characterNum; ++i)
         {
             // プレイヤーの向いてる向きに応じて、絵を切り替えます
@@ -123,7 +124,7 @@ public class Work4CharaManager : MonoBehaviour
             Quaternion cameraRotate = Quaternion.FromToRotation(cameraDir, Vector3.forward);
             int direction = AnimationInfo.GetDirection(cameraRotate * velocities[i]);//<-カメラと、キャラクターの向きを考慮してどの向きを向くかを決定します
 
-            int rectIndex = ((int)(i * 0.3f + Time.realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
+            int rectIndex = ((int)(i * 0.3f + realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
             this.drawParameter[i] = animationRectInfo[rectIndex];
         }
 

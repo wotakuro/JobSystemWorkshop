@@ -140,15 +140,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runningAnimationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f,
-    type: 2}
-  attackingAnimationInfo: {fileID: 11400000, guid: 67a44b2cb6d48a14fa785819fd71e9a6,
-    type: 2}
-  goDownAnimationInfo: {fileID: 11400000, guid: 545d77c111c29b54085f16536875cfee,
-    type: 2}
+  animationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
   drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
-  characterNum: 2000
+  characterNum: 3000
+  characterVelocity: {x: 0, y: 0, z: -1}
+  playerSpawnRect:
+    serializedVersion: 2
+    x: -21
+    y: 14
+    width: 42
+    height: -7
 --- !u!4 &120388038
 Transform:
   m_ObjectHideFlags: 0
@@ -172,6 +174,7 @@ GameObject:
   - component: {fileID: 282840814}
   - component: {fileID: 282840813}
   - component: {fileID: 282840811}
+  - component: {fileID: 282840812}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -186,6 +189,19 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 282840810}
   m_Enabled: 1
+--- !u!114 &282840812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 282840810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f79cb11d787dc346bc59730577135c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotTime: 30
+  distance: 20
 --- !u!20 &282840813
 Camera:
   m_ObjectHideFlags: 0
@@ -203,7 +219,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 50
   field of view: 40
   orthographic: 0
   orthographic size: 5
@@ -229,7 +245,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 282840810}
   m_LocalRotation: {x: 0.2832956, y: -0, z: -0, w: 0.95903265}
-  m_LocalPosition: {x: 0, y: 10.84, z: -21.94}
+  m_LocalPosition: {x: 0, y: 6, z: -21.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -262,15 +278,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runningAnimationInfo: {fileID: 11400000, guid: 822daacbcfdc4f8439bad12e8d3bd33e,
-    type: 2}
-  attackingAnimationInfo: {fileID: 11400000, guid: e29a14cbcc6951b4d9773cf81f8c2ffb,
-    type: 2}
-  goDownAnimationInfo: {fileID: 11400000, guid: 545d77c111c29b54085f16536875cfee,
-    type: 2}
+  animationInfo: {fileID: 11400000, guid: 822daacbcfdc4f8439bad12e8d3bd33e, type: 2}
   drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
-  characterNum: 2000
+  characterNum: 3000
+  characterVelocity: {x: 0, y: 0, z: 1}
+  playerSpawnRect:
+    serializedVersion: 2
+    x: -21
+    y: -14
+    width: 42
+    height: 7
 --- !u!4 &1244837175
 Transform:
   m_ObjectHideFlags: 0
@@ -293,7 +311,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: -1.04
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalPosition.y
@@ -301,7 +319,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.77
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalRotation.x
@@ -325,7 +343,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 1fc7b24b2f05e174b83459f49cef2732, type: 3}
       propertyPath: m_LocalScale.y
