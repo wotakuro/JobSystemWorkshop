@@ -17,7 +17,7 @@ public class Work4JobCharaManager : MonoBehaviour
     // キャラクターのプレハブ
     public GameObject prefab;
     // アニメーションの情報
-    public AnimationInfo animationInfo;
+    public AppAnimationInfo animationInfo;
     // 描画用のマテリアル
     public Material drawMaterial;
 
@@ -104,7 +104,7 @@ public class Work4JobCharaManager : MonoBehaviour
             cameraDir.y = 0.0f;
             Quaternion cameraRotate = Quaternion.FromToRotation(cameraDir, Vector3.forward);
 
-            int direction = AnimationInfo.GetDirection(cameraRotate * velocities[index]);
+            int direction = AppAnimationInfo.GetDirection(cameraRotate * velocities[index]);
             int rectIndex = ((int)(index * 0.3f + realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
             this.drawParameter[index] = animationRectInfo[rectIndex];
         }

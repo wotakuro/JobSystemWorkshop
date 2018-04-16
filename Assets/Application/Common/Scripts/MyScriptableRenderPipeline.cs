@@ -25,6 +25,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
     ///
     public List <CommandBuffer> zPrepassCommandBuffers = new List<CommandBuffer>();
     public List<CommandBuffer> actualCommandBuffers = new List<CommandBuffer>();
+    public List<CommandBuffer> shadowCommandBuffers = new List<CommandBuffer>();
 
     private static MyScriptableRenderPipelineInstance instance;
 
@@ -85,6 +86,12 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
             }
             // キャラクターをBasicPassで描画します
             DrawCharacter(context, camera, basicPass, SortFlags.OptimizeStateChanges);
+
+            // 何か入っていれば...
+            if (shadowCommandBuffers != null && idx == 0)
+            {
+                ExecuteCommandBufferList(context, shadowCommandBuffers);
+            }
             // 最後に影を描画します
             DrawShadow(context, camera);
 
@@ -94,6 +101,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
         }
     }
 
+    // コマンドバッファーのリストを実行
     private void ExecuteCommandBufferList(ScriptableRenderContext context, List<CommandBuffer> cmdBuffers)
     {
         if (cmdBuffers == null) { return; }
@@ -164,6 +172,7 @@ public class MyScriptableRenderPipelineInstance : RenderPipeline
         }
     }
 
+    // 破棄時の処理
     public override void Dispose()
     {
         base.Dispose();

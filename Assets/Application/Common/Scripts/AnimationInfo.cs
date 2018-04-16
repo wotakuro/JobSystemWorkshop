@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// スプライトのパラパラアニメーションの情報
-public class AnimationInfo : ScriptableObject {
+public class AppAnimationInfo : ScriptableObject {
     public Sprite[] sprites;
 
     public const int AnglePatternNum = 8;

@@ -18,7 +18,7 @@ public class Work4CharaManager : MonoBehaviour
     // キャラクターのプレハブ
     public GameObject prefab;
     // アニメーションの情報
-    public AnimationInfo animationInfo;
+    public AppAnimationInfo animationInfo;
     // 描画用のマテリアル
     public Material drawMaterial;
 
@@ -122,7 +122,7 @@ public class Work4CharaManager : MonoBehaviour
             var cameraDir = characterTransforms[i].position - Camera.main.transform.position;
             cameraDir.y = 0.0f;
             Quaternion cameraRotate = Quaternion.FromToRotation(cameraDir, Vector3.forward);
-            int direction = AnimationInfo.GetDirection(cameraRotate * velocities[i]);//<-カメラと、キャラクターの向きを考慮してどの向きを向くかを決定します
+            int direction = AppAnimationInfo.GetDirection(cameraRotate * velocities[i]);//<-カメラと、キャラクターの向きを考慮してどの向きを向くかを決定します
 
             int rectIndex = ((int)(i * 0.3f + realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
             this.drawParameter[i] = animationRectInfo[rectIndex];

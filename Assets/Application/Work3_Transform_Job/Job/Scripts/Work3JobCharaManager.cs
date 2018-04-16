@@ -18,7 +18,7 @@ public class Work3JobCharaManager : MonoBehaviour
     // キャラクターのプレハブ
     public GameObject prefab;
     // アニメーションの情報
-    public AnimationInfo animationInfo;
+    public AppAnimationInfo animationInfo;
     // 描画用のマテリアル
     public Material drawMaterial;
 

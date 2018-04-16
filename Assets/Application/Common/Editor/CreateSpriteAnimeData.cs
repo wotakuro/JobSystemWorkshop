@@ -29,11 +29,11 @@ public class CreateSpriteAnimeData : EditorWindow {
 
     private static void CreateData( string nameHead){
         string path = "Assets/Application/Common/Datas/" + nameHead + ".asset";
-        var instance = AssetDatabase.LoadAssetAtPath<AnimationInfo>( path );
+        var instance = AssetDatabase.LoadAssetAtPath<AppAnimationInfo>( path );
         bool isExists = (instance != null);
         if (!isExists)
         {
-            instance = Editor.CreateInstance<AnimationInfo>();
+            instance = Editor.CreateInstance<AppAnimationInfo>();
         }
 
         instance.sprites = GetTargetSprites(nameHead);

@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 120388038}
-  - component: {fileID: 120388037}
+  - component: {fileID: 120388039}
   m_Layer: 0
   m_Name: YukoManager
   m_TagString: Untagged
@@ -129,29 +129,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &120388037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 120388036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
-  drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  drawCharaMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
-  drawShadowMaterial: {fileID: 2100000, guid: 9cd9cb900546f24459dea0648cfe6508, type: 2}
-  characterNum: 3000
-  characterVelocity: {x: 0, y: 0, z: -1}
-  playerSpawnRect:
-    serializedVersion: 2
-    x: -21
-    y: 14
-    width: 42
-    height: -7
 --- !u!4 &120388038
 Transform:
   m_ObjectHideFlags: 0
@@ -165,6 +142,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120388039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 120388036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf3ec68def14c1438951a96893d0d8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
+  drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  drawCharaMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
+  drawShadowMaterial: {fileID: 2100000, guid: 9cd9cb900546f24459dea0648cfe6508, type: 2}
+  characterNum: 1800
+  characterVelocity: {x: 0, y: 0, z: -1}
+  playerSpawnRect:
+    serializedVersion: 2
+    x: -21
+    y: 14
+    width: 42
+    height: -7
 --- !u!1001 &263152997
 Prefab:
   m_ObjectHideFlags: 0
@@ -422,7 +422,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1244837175}
-  - component: {fileID: 1244837174}
+  - component: {fileID: 1244837176}
   m_Layer: 0
   m_Name: MisakiManager
   m_TagString: Untagged
@@ -430,7 +430,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1244837174
+--- !u!4 &1244837175
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1244837173}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.71, z: 12.48}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1244837176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -438,7 +451,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1244837173}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cf3ec68def14c1438951a96893d0d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animationInfo: {fileID: 11400000, guid: 822daacbcfdc4f8439bad12e8d3bd33e, type: 2}
@@ -453,19 +466,6 @@ MonoBehaviour:
     y: -14
     width: 42
     height: 7
---- !u!4 &1244837175
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1244837173}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.71, z: 12.48}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1313587605
 Prefab:
   m_ObjectHideFlags: 0
