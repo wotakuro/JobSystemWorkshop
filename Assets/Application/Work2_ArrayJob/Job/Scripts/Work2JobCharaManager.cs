@@ -13,8 +13,72 @@ using Unity.Jobs.LowLevel.Unsafe;
 
 
 // ワーク3．キャラクターを管理するマネージャ
-public class Work2CharaManager : MonoBehaviour
+public class Work2JobCharaManager : MonoBehaviour
 {
+
+    /// <summary>
+    /// キャラクターの更新処理
+    /// </summary>
+    private struct CharacterUpdateJob : IJobParallelFor
+    {
+        //キャラクター位置
+        public NativeArray<Vector3> characterPosition;
+        // 描画用のMatrix
+        [WriteOnly]
+        public NativeArray<Matrix4x4> characterMatrices;
+        // 描画用のパラメーター
+        [WriteOnly]
+        public NativeArray<Vector4> characterDrawParameter;
+
+        // Animation用の描画領域
+        [ReadOnly]
+        public NativeArray<Vector4> animationVectorInfo;
+
+        // キャラクターの位置
+        public Vector3 characterVelocity;
+        // Cameraの位置
+        public Vector3 cameraPosition;
+        // Animationの長さ
+        public int animationLength;
+        // 時間処理用
+        public float realtimeSinceStartup;
+        public float deltaTime;
+
+        /// <summary>
+        /// 実行用の関数
+        /// </summary>
+        /// <param name="index"> index </param>
+        public void Execute(int index)
+        {
+            // 移動処理
+            characterPosition[index] = characterPosition[index] + characterVelocity * deltaTime;
+            // はみ出し処理対応
+            if (characterPosition[index].z < -InitPosZParam)
+            {
+                characterPosition[index] = new Vector3(characterPosition[index].x, characterPosition[index].y, InitPosZParam);
+            }
+            else if (characterPosition[index].z > InitPosZParam)
+            {
+                characterPosition[index] = new Vector3(characterPosition[index].x, characterPosition[index].y, -InitPosZParam);
+            }
+            if (characterPosition[index].x < -InitPosXParam)
+            {
+                characterPosition[index] = new Vector3(InitPosXParam, characterPosition[index].y, characterPosition[index].z);
+            }
+            else if (characterPosition[index].x > InitPosXParam)
+            {
+                characterPosition[index] = new Vector3(-InitPosXParam, characterPosition[index].y, characterPosition[index].z);
+            }
+            // マトリックス計算
+            characterMatrices[index] = CreateMatrix(characterPosition[index], cameraPosition);
+            // 向きを計算
+            Vector3 forwardFromCamera = GetVectorFromCamera(cameraPosition, characterPosition[index], characterVelocity);
+            int direction = AppAnimationInfo.GetDirection(forwardFromCamera);//<-カメラと、キャラクターの向きを考慮してどの向きを向くかを決定します
+            int frameIdx = direction * animationLength;
+            int rectIndex = ((int)(index * 0.3f + realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
+            characterDrawParameter[index] = animationVectorInfo[rectIndex];
+        }
+    }
 
     // ランダム出現位置に関するぱらえーた
     private const float InitPosXParam = 22.5f;
@@ -72,6 +136,8 @@ public class Work2CharaManager : MonoBehaviour
     // フレーム数カウント
     private int frameIndex = 0;
 
+    // Jobのハンドル
+    private JobHandle jobHandle;
 
 
     /// <summary>
@@ -125,56 +191,35 @@ public class Work2CharaManager : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // 前のフレームで出した結果を待ちます
+        jobHandle.Complete();
         characterVelocity.y = 0.0f;
         if (frameIndex == 2)
         {
             AddCommandBuffer();
         }
         ++frameIndex;
-        Vector3 cameraPosition = Camera.main.transform.position;
-        int animationLength = animationInfo.animationLength;
-        float realtimeSinceStartup = Time.realtimeSinceStartup;
-        float deltaTime = Time.deltaTime;
 
-        // ここを IJobParallelForを利用して並行処理にします
-        for (int i = 0; i < characterNum;++i )
-        {
-            // 移動処理
-            characterPosition[i] = characterPosition[i] + characterVelocity * deltaTime;
-            // はみ出し処理対応
-            if (characterPosition[i].z < -InitPosZParam)
-            {
-                characterPosition[i] = new Vector3(characterPosition[i].x, characterPosition[i].y, InitPosZParam);
-            }
-            else if (characterPosition[i].z >InitPosZParam)
-            {
-                characterPosition[i] = new Vector3(characterPosition[i].x, characterPosition[i].y, -InitPosZParam);
-            }
-            if (characterPosition[i].x < -InitPosXParam)
-            {
-                characterPosition[i] = new Vector3(InitPosXParam, characterPosition[i].y, characterPosition[i].z);
-            }
-            else if (characterPosition[i].x > InitPosXParam)
-            {
-                characterPosition[i] = new Vector3(-InitPosXParam, characterPosition[i].y, characterPosition[i].z);
-            }  
-            // マトリックス計算
-            characterMatrices[i] = CreateMatrix( characterPosition[i], cameraPosition );
-            // 向きを計算
-            Vector3 forwardFromCamera = GetVectorFromCamera(cameraPosition ,characterPosition[i],characterVelocity);
-            int direction = AppAnimationInfo.GetDirection(forwardFromCamera);//<-カメラと、キャラクターの向きを考慮してどの向きを向くかを決定します
-            int frameIdx = direction * animationLength;
-            int rectIndex = ((int)(i * 0.3f + realtimeSinceStartup * 25.0f)) % animationLength + (direction * animationLength);
-            characterDrawParameter[i] = animationVectorInfo[rectIndex];
-        }
         // 描画周り
-        UnityEngine.Profiling.Profiler.BeginSample("DrawCommandsCreate");
         this.DrawCommandsCreate();
-        UnityEngine.Profiling.Profiler.EndSample();
         // 影の描画処理
-        UnityEngine.Profiling.Profiler.BeginSample("DrawShadows");
         this.DrawShadows();
-        UnityEngine.Profiling.Profiler.EndSample();
+
+
+        // Jobを作成して発行します。
+        CharacterUpdateJob job = new CharacterUpdateJob(){
+            characterPosition = characterPosition,
+            characterMatrices = characterMatrices,
+            characterDrawParameter = characterDrawParameter,
+            animationVectorInfo = animationVectorInfo,
+            characterVelocity = characterVelocity,
+            cameraPosition = Camera.main.transform.position,
+            animationLength = animationInfo.animationLength,
+            realtimeSinceStartup = Time.realtimeSinceStartup,
+            deltaTime = Time.deltaTime
+        };
+        jobHandle = job.Schedule(characterNum, 10);
+        JobHandle.ScheduleBatchedJobs();
     }
 
     /// <summary>
@@ -246,6 +291,8 @@ public class Work2CharaManager : MonoBehaviour
     /// </summary>
     void OnDestroy()
     {
+        // Jobをここで終了しておかないと正しく解放できません
+        jobHandle.Complete();
         if (MyScriptableRenderPipelineInstance.Instance != null)
         {
             MyScriptableRenderPipelineInstance.Instance.zPrepassCommandBuffers.Remove(zPrepassCommandBuffer);

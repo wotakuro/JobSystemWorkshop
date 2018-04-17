@@ -13,7 +13,7 @@ using Unity.Jobs.LowLevel.Unsafe;
 
 
 // ワーク2．キャラクターを管理するマネージャ
-public class Work2JobCharaManager : MonoBehaviour
+public class Work2CharaManager : MonoBehaviour
 {
 
     // ランダム出現位置に関するぱらえーた
