@@ -8,9 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 9f08c099a4aa11944889e65895757ff2, type: 3}
   m_Name: Misaki_win_humanoid-Running
-  m_EditorClassIdentifier: Common::AppAnimationInfo
+  m_EditorClassIdentifier: 
   sprites:
   - {fileID: 21300000, guid: 83bd54b85a08ecc44ab239b8d751c56e, type: 3}
   - {fileID: 21300000, guid: 6637e3e84c0732c4c8951c0dc73c08d0, type: 3}

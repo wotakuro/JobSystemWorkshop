@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1192997127559954, guid: 997f40ac3732aa44a881d5cf34cf0998, type: 2}
-  animationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
+  animationInfo: {fileID: 11400000, guid: c5f52a343360fb74f9b4b24ba0dced47, type: 2}
   drawMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
   characterNum: 2000
 --- !u!4 &120388038
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1192997127559954, guid: 997f40ac3732aa44a881d5cf34cf0998, type: 2}
-  animationInfo: {fileID: 11400000, guid: 822daacbcfdc4f8439bad12e8d3bd33e, type: 2}
+  animationInfo: {fileID: 11400000, guid: bf9cb170ccf62ff448e3a111b26c430c, type: 2}
   drawMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
   characterNum: 2000
 --- !u!4 &1244837175

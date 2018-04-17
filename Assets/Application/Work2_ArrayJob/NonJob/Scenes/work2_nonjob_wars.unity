@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationInfo: {fileID: 11400000, guid: 5f067713a0f945249b07e059e6211e8f, type: 2}
+  animationInfo: {fileID: 11400000, guid: c5f52a343360fb74f9b4b24ba0dced47, type: 2}
   drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawCharaMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
   drawShadowMaterial: {fileID: 2100000, guid: 9cd9cb900546f24459dea0648cfe6508, type: 2}
@@ -352,68 +352,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 32.914, y: 0, z: 0}
---- !u!1 &1067642004
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1067642007}
-  - component: {fileID: 1067642006}
-  - component: {fileID: 1067642005}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1067642005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1067642004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &1067642006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1067642004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &1067642007
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1067642004}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1244837173
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cc68521bc127841b10f603d9f76d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationInfo: {fileID: 11400000, guid: 822daacbcfdc4f8439bad12e8d3bd33e, type: 2}
+  animationInfo: {fileID: 11400000, guid: bf9cb170ccf62ff448e3a111b26c430c, type: 2}
   drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawCharaMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
   drawShadowMaterial: {fileID: 2100000, guid: 9cd9cb900546f24459dea0648cfe6508, type: 2}
