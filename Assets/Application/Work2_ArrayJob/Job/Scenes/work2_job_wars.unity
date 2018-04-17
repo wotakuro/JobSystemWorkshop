@@ -157,7 +157,7 @@ MonoBehaviour:
   drawMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawCharaMaterial: {fileID: 2100000, guid: b92bfcba3e41cbb41aa366f6c792f905, type: 2}
   drawShadowMaterial: {fileID: 2100000, guid: 9cd9cb900546f24459dea0648cfe6508, type: 2}
-  characterNum: 1800
+  characterNum: 3000
   characterVelocity: {x: 0, y: 0, z: -1}
   playerSpawnRect:
     serializedVersion: 2
@@ -260,10 +260,6 @@ Prefab:
     - target: {fileID: 224851374320536348, guid: 4554ce5d36bbf22419166345470553ef,
         type: 2}
       propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1793907869116772, guid: 4554ce5d36bbf22419166345470553ef, type: 2}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

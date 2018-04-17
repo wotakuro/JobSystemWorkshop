@@ -145,6 +145,8 @@ public class Work2JobCharaManager : MonoBehaviour
     /// </summary>
     void Start()
     {
+        // Debugger登録
+        DebugUI.SetCounter(animationInfo, characterNum);
         // animation の情報初期化
         animationInfo.Initialize();
         animationVectorInfo = new NativeArray<Vector4>(animationInfo.Length, Allocator.Persistent);

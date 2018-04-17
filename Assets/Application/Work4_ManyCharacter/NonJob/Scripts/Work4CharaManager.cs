@@ -47,6 +47,8 @@ public class Work4CharaManager : MonoBehaviour
     /// </summary>
     void Start()
     {
+        // Debugger登録
+        DebugUI.SetCounter(animationInfo, characterNum);
         // animation の情報初期化
         animationInfo.Initialize();
         // それぞれのバッファーを初期化/作成
